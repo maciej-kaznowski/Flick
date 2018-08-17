@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 class FlickDismissLayout(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
   var gestureListener: FlickGestureListener? = null
+  var rotateOnTouch: Boolean = true
 
   override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
     val intercepted = requireGestureListener().onTouch(this, ev)
@@ -29,5 +30,11 @@ class FlickDismissLayout(context: Context, attrs: AttributeSet) : FrameLayout(co
       throw AssertionError("Did you forget to set gestureListener?")
     }
     return gestureListener!!
+  }
+
+  init {
+    val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.FlickDismissLayout, 0, 0)
+    rotateOnTouch = typedArray.getBoolean(R.styleable.FlickDismissLayout_flick_rotateOnTouch, true)
+    typedArray.recycle()
   }
 }

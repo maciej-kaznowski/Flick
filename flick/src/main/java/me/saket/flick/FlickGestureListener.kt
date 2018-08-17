@@ -147,11 +147,13 @@ class FlickGestureListener(
 
           view.parent.requestDisallowInterceptTouchEvent(true)
 
-          // Rotate the content because. The idea is that we naturally
-          // make drags in a circular path while holding our phones.
-          val moveRatioDelta = deltaY / view.height * (if (touchStartedOnLeftSide) -20F else 20F)
-          view.pivotY = 0f
-          view.rotation = view.rotation + moveRatioDelta
+          if((view as FlickDismissLayout).rotateOnTouch) {
+            // Rotate the content because. The idea is that we naturally
+            // make drags in a circular path while holding our phones.
+            val moveRatioDelta = deltaY / view.height * (if (touchStartedOnLeftSide) -20F else 20F)
+            view.pivotY = 0f
+            view.rotation = view.rotation + moveRatioDelta
+          }
 
           dispatchOnPhotoMoveCallback(view)
 
@@ -191,7 +193,7 @@ class FlickGestureListener(
   }
 
   private fun animateDismissal(view: View, downwards: Boolean, flickAnimDuration: Long) {
-    if (view.pivotY != 0f) {
+    if ((view as FlickDismissLayout).rotateOnTouch and (view.pivotY != 0f)) {
       throw AssertionError("Formula used for calculating distance rotated only works if the pivot is at (x,0")
     }
 
